@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 app.options(
   "*",
   cors({
-    origin: "http://localhost:5173",
+    origin: "https://mern-chat-app-three-xi.vercel.app",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
