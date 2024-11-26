@@ -16,7 +16,7 @@ const app = express();
 
 // Allowed origins for CORS
 const allowedOrigins = [
-  "https://mern-chat-app-i8mu.vercel.app",
+  "https://mern-chat-app-server-delta.vercel.app",
   "https://mern-chat-app-three-xi.vercel.app",
 ];
 
