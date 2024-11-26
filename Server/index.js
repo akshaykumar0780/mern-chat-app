@@ -11,16 +11,11 @@ const { setupSocket } = require("./socket");
 
 dotenv.config();
 const PORT = process.env.PORT || 5000;
+const allowedOrigins = process.env.ORIGIN.split(",");
 
 const app = express();
 
-// Allowed origins for CORS
-const allowedOrigins = [
-  "https://mern-chat-app-server-delta.vercel.app",
-  "https://mern-chat-app-three-xi.vercel.app",
-];
-
-// Middleware to dynamically set CORS headers
+// CORS Middleware
 app.use((req, res, next) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
@@ -32,7 +27,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Handle OPTIONS preflight requests
 app.options("*", (req, res) => {
   const origin = req.headers.origin;
   if (allowedOrigins.includes(origin)) {
