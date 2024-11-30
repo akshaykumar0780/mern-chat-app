@@ -5,24 +5,16 @@ const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoute = require("./routes/auth");
 dotenv.config();
-const PORT = process.env.PORT || 5000;
+PORT = process.env.PORT || 5000;
 const contactRoute = require("./routes/contacts");
+
 const channelRoute = require("./routes/channel");
+
 const messageRoute = require("./routes/messages");
 const { setupSocket } = require("./socket");
 const app = express();
 
-// middleware
-app.use(cookieParser());
-app.use(express.json());
-
-// CORS configuration
-app.use(cors({
-  origin: "https://mern-chat-app-three-xi.vercel.app",
-  methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
-  credentials: true,
-}));
-
+//middleware
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "https://mern-chat-app-three-xi.vercel.app");
   res.header("Access-Control-Allow-Credentials", "true");
@@ -31,10 +23,23 @@ app.use((req, res, next) => {
   next();
 });
 
-// routes
+app.options(
+  "*",
+  cors({
+    origin: "https://mern-chat-app-three-xi.vercel.app",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true,
+  })
+);
+
+app.use(cookieParser());
+app.use(express.json());
+
+//routes
 app.use("/auth", authRoute);
 app.use("/uploads/profiles", express.static("uploads/profiles"));
 app.use("/uploads/files", express.static("uploads/files"));
+
 app.use("/contacts", contactRoute);
 app.use("/messages", messageRoute);
 app.use("/channel", channelRoute);
