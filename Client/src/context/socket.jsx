@@ -21,7 +21,7 @@ export const SocketProvider = ({ children }) => {
         query: { userId: userInfo.id },
       });
       socket.current.on("connect", () => {
-        console.log("connected to  socket server");
+        // console.log("connected to  socket server");
       });
 
       const handleReceiveMessage = (message) => {

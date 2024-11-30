@@ -16,7 +16,7 @@ const Chat = () => {
     fileDownloadProgress,
   } = useAppStore();
   const navigate = useNavigate();
-  console.log(userInfo);
+  // console.log(userInfo);
 
   useEffect(() => {
     if (userInfo && !userInfo.profileSetup) {
