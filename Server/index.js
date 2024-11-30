@@ -4,62 +4,52 @@ const { connectToMongoDB } = require("./connection");
 const cors = require("cors");
 const cookieParser = require("cookie-parser");
 const authRoute = require("./routes/auth");
+dotenv.config();
+PORT = process.env.PORT || 5000;
 const contactRoute = require("./routes/contacts");
+
 const channelRoute = require("./routes/channel");
+
 const messageRoute = require("./routes/messages");
 const { setupSocket } = require("./socket");
-
-dotenv.config();
-const PORT = process.env.PORT || 5000;
-const allowedOrigins = process.env.ORIGIN.split(",");
-
 const app = express();
 
-// CORS Middleware
+//middleware
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  }
+  res.header("Access-Control-Allow-Origin", "https://mern-chat-app-three-xi.vercel.app/");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
 
-app.options("*", (req, res) => {
-  const origin = req.headers.origin;
-  if (allowedOrigins.includes(origin)) {
-    res.header("Access-Control-Allow-Origin", origin);
-    res.header("Access-Control-Allow-Credentials", "true");
-    res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
-  }
-  res.sendStatus(200);
-});
+app.options(
+  "*",
+  cors({
+    origin: "https://mern-chat-app-three-xi.vercel.app/",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true,
+  })
+);
 
-// Middleware
 app.use(cookieParser());
 app.use(express.json());
-app.use(cors({ origin: allowedOrigins, credentials: true }));
 
-// Routes
+//routes
 app.use("/auth", authRoute);
 app.use("/uploads/profiles", express.static("uploads/profiles"));
 app.use("/uploads/files", express.static("uploads/files"));
+
 app.use("/contacts", contactRoute);
 app.use("/messages", messageRoute);
 app.use("/channel", channelRoute);
 
-// Connect to MongoDB
 connectToMongoDB(process.env.MONGODB_URL).then(() => {
-  console.log("Connected to MongoDB");
+  console.log("connected to MongoDB");
 });
 
-// Start the server
 const server = app.listen(PORT, () => {
-  console.log(`Server started at ${PORT}`);
+  console.log(`server started at ${PORT}`);
 });
 
-// Set up WebSocket
 setupSocket(server);
