@@ -15,11 +15,34 @@ const { setupSocket } = require("./socket");
 const app = express();
 
 //middleware
-app.use(
-  cors({
-    origin: "*",
-  })
-);
+const allowedOrigins = process.env.ORIGIN.split(",");
+
+app.use((req, res, next) => {
+  const origin = req.headers.origin;
+
+  // Allow requests from specific origins
+  if (allowedOrigins.includes(origin)) {
+    res.setHeader("Access-Control-Allow-Origin", origin);
+    res.setHeader("Access-Control-Allow-Credentials", "true");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "GET, POST, PUT, DELETE, PATCH, OPTIONS"
+    );
+    res.setHeader(
+      "Access-Control-Allow-Headers",
+      "Content-Type, Authorization"
+    );
+  }
+
+  // Handle preflight requests
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
+  next();
+});
+
+app.use(cors({ origin: allowedOrigins, credentials: true }));
 
 app.use(cookieParser());
 app.use(express.json());
