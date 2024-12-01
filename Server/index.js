@@ -16,7 +16,7 @@ const app = express();
 
 //middleware
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://mern-chat-app-server-delta.vercel.app");
+  res.header("Access-Control-Allow-Origin", "https://mern-chat-client-b1w0.onrender.com");
   res.header("Access-Control-Allow-Credentials", "true");
   res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
@@ -26,7 +26,7 @@ app.use((req, res, next) => {
 app.options(
   "*",
   cors({
-    origin: "https://mern-chat-app-server-delta.vercel.app",
+    origin: "https://mern-chat-client-b1w0.onrender.com",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
