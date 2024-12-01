@@ -15,34 +15,22 @@ const { setupSocket } = require("./socket");
 const app = express();
 
 //middleware
-const allowedOrigins = process.env.ORIGIN.split(",");
-
 app.use((req, res, next) => {
-  const origin = req.headers.origin;
-
-  // Allow requests from specific origins
-  if (allowedOrigins.includes(origin)) {
-    res.setHeader("Access-Control-Allow-Origin", origin);
-    res.setHeader("Access-Control-Allow-Credentials", "true");
-    res.setHeader(
-      "Access-Control-Allow-Methods",
-      "GET, POST, PUT, DELETE, PATCH, OPTIONS"
-    );
-    res.setHeader(
-      "Access-Control-Allow-Headers",
-      "Content-Type, Authorization"
-    );
-  }
-
-  // Handle preflight requests
-  if (req.method === "OPTIONS") {
-    return res.sendStatus(200);
-  }
-
+  res.header("Access-Control-Allow-Origin", "https://mern-chat-app-server-delta.vercel.app");
+  res.header("Access-Control-Allow-Credentials", "true");
+  res.header("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   next();
 });
 
-app.use(cors({ origin: allowedOrigins, credentials: true }));
+app.options(
+  "*",
+  cors({
+    origin: "https://mern-chat-app-server-delta.vercel.app",
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
+    credentials: true,
+  })
+);
 
 app.use(cookieParser());
 app.use(express.json());
